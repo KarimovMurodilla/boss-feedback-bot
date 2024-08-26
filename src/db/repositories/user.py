@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.structures.role import Role
 
-from ..models import Base, User
+from ..models import User
 from .abstract import Repository
 
 
@@ -46,9 +46,10 @@ class UserRepo(Repository[User]):
                 role=role,
             )
         )
+        await self.session.commit()
 
-    async def get_role(self, user_id: int) -> Role:
+    async def get_me(self, user_id: int) -> User:
         """Get user role by id."""
         return await self.session.scalar(
-            select(User.role).where(User.user_id == user_id).limit(1)
+            select(User).where(User.user_id == user_id).limit(1)
         )
